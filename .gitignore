@@ -1,0 +1,19 @@
+# Personal working files — never publish these.
+# They live in this folder for convenience but are not part of the website.
+voice-profile-declan.md
+anti-ai-writing-style.md
+SKILL.md
+webdesign md.md
+
+# Local copies of the photos. The site loads these from Google Drive,
+# so shipping 24MB of duplicates would only slow the deploy down.
+BHSPhotos/
+
+# macOS junk
+.DS_Store
+**/.DS_Store
+
+# Tooling
+.claude/
+.vercel/
+node_modules/

@@ -1,0 +1,854 @@
+/* ============================================================
+   BRIARCLIFF HIGH SCHOOL — CLASS OF 1976 — 50TH REUNION
+   Shared stylesheet for every page.
+
+   Design notes:
+   - Palette is the school's silver and blue, with silver rendered
+     as a metal (gradient + specular sweep) rather than a flat grey.
+   - Base type is 19px. The audience is in its late sixties, so
+     contrast and target size are treated as hard requirements.
+   - The foil effect is confined to display type. Never body copy.
+   ============================================================ */
+
+:root{
+  /* Colour */
+  --ink:        #070E1A;
+  --navy:       #0E1B30;
+  --navy-2:     #16263F;
+  --navy-3:     #1E3352;
+  --hair:       rgba(199,207,216,.15);
+  --hair-2:     rgba(199,207,216,.28);
+  --silver:     #B9C4D0;
+  --silver-hi:  #EDF2F8;
+  --spinel:     #3B7DE3;
+  --spinel-lt:  #7FB0F7;
+  --brass:      #CBA53F;
+  --mist:       #E9EEF4;
+  --mist-2:     #DCE4EC;
+  --mist-ink:   #16263F;
+  --paper:      #F1EDE1;   /* matches the crest artwork's own paper field */
+
+  /* Type */
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body:    "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --util:    "Courier Prime", "Courier New", monospace;
+
+  --t-label: .8125rem;
+  --t-sm:    1rem;
+  --t-base:  1.1875rem;
+  --t-lg:    1.3125rem;
+  --t-h3:    clamp(1.5rem, 1rem + 2vw, 2.05rem);
+  --t-h2:    clamp(2.1rem, 1.2rem + 3.6vw, 3.4rem);
+  --t-h1:    clamp(2.25rem, 1rem + 5vw, 5rem);
+  --t-page:  clamp(2.3rem, 1.4rem + 3.4vw, 4rem);
+  --t-mega:  clamp(8rem, 4rem + 20vw, 17rem);
+
+  /* Space */
+  --s-1: .5rem;  --s-2: 1rem;   --s-3: 1.5rem;  --s-4: 2.25rem;
+  --s-5: 3.5rem; --s-6: 5rem;   --s-7: 7rem;    --s-8: 10rem;
+
+  --wrap: 1180px;
+  --ease: cubic-bezier(.22,.7,.28,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--silver-hi);
+  font-family:var(--body);
+  font-size:var(--t-base);
+  line-height:1.7;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* Film grain over the whole page. Very low opacity, purely atmospheric. */
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none; z-index:200;
+  opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+}
+
+img{ max-width:100%; display:block; }
+
+a{ color:var(--spinel-lt); text-underline-offset:.22em; text-decoration-thickness:1px; }
+a:hover{ color:var(--silver-hi); }
+
+:focus-visible{
+  outline:3px solid var(--spinel-lt);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+.wrap{ width:100%; max-width:var(--wrap); margin-inline:auto; padding-inline:var(--s-3); }
+
+.skip{
+  position:absolute; left:-9999px; top:0;
+  background:var(--spinel); color:#fff; padding:.9rem 1.3rem;
+  font-weight:600; z-index:300;
+}
+.skip:focus{ left:var(--s-3); top:var(--s-2); }
+
+/* ---------- Shared type helpers ---------- */
+
+.label{
+  font-family:var(--util);
+  font-size:var(--t-label);
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--silver);
+  margin:0;
+}
+
+/* Foil: the darkest stop is deliberately kept high so every word of a
+   headline stays well above 7:1 on navy. Shimmer, not shadow. */
+.foil{
+  background:linear-gradient(100deg,
+    #A6B3C2 0%, #D6DFE9 18%, #FFFFFF 30%, #D6DFE9 42%,
+    #AEBAC8 58%, #F0F5FA 74%, #B4C0CD 90%, #D6DFE9 100%);
+  background-size:280% 100%;
+  background-position:0% 50%;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  animation:sweep 9s var(--ease) infinite;
+}
+@keyframes sweep{
+  0%,12%   { background-position:  0% 50%; }
+  55%,100% { background-position:100% 50%; }
+}
+
+h1,h2,h3{ font-family:var(--display); font-weight:900; line-height:1.02; letter-spacing:-.03em; margin:0;
+  font-variation-settings:"SOFT" 40, "WONK" 1; }
+
+h2{ font-size:var(--t-h2); }
+h3{ font-size:var(--t-h3); letter-spacing:-.02em; }
+
+p{ margin:0 0 1.1em; }
+p:last-child{ margin-bottom:0; }
+
+/* ---------- Buttons ---------- */
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.7em;
+  min-height:56px; padding:.85rem 1.9rem;
+  font-family:var(--body); font-size:1.0625rem; font-weight:600; letter-spacing:.01em;
+  border-radius:2px; border:1px solid transparent;
+  text-decoration:none; cursor:pointer;
+  transition:transform .3s var(--ease), background-color .3s var(--ease),
+             border-color .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.btn-primary{
+  background:var(--spinel); color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset,
+             0 10px 24px -10px rgba(59,125,227,.75),
+             0 2px 8px -2px rgba(7,14,26,.8);
+}
+.btn-primary:hover{ background:#4f8bea; color:#fff; transform:translateY(-2px); }
+.btn-primary:active{ transform:translateY(0); }
+
+.btn-ghost{
+  background:transparent; color:var(--silver-hi); border-color:var(--hair-2);
+}
+.btn-ghost:hover{ border-color:var(--silver); background:rgba(199,207,216,.07); transform:translateY(-2px); }
+.btn-ghost:active{ transform:translateY(0); }
+
+/* ---------- Header ---------- */
+
+.masthead{
+  position:sticky; top:0; z-index:100;
+  background:rgba(7,14,26,.9);
+  backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--hair);
+}
+.masthead .wrap{
+  display:flex; align-items:center; flex-wrap:wrap;
+  gap:var(--s-3);
+  min-height:72px;
+}
+.brand{
+  order:1;
+  display:flex; align-items:center; gap:.8rem;
+  text-decoration:none; color:inherit; margin-right:auto;
+}
+/* The real Barons crest sits on its own cream plate, the way a decal
+   would. The source art has a paper background, so we lean into it. */
+.seal{
+  width:54px; height:54px; flex:none;
+  padding:3px;
+  background:var(--paper);
+  border:1px solid rgba(203,165,63,.55);
+  border-radius:3px;
+  box-shadow:0 3px 10px -4px rgba(7,14,26,.9);
+}
+.seal img{ width:100%; height:100%; object-fit:contain; }
+.brand-txt{ line-height:1.2; }
+.brand-txt b{
+  display:block; font-family:var(--display); font-weight:900;
+  font-size:1.0625rem; letter-spacing:-.02em; color:var(--silver-hi);
+}
+.brand-txt span{
+  display:block; font-family:var(--util); font-size:.72rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--silver);
+}
+
+.nav{ order:2; display:flex; align-items:center; gap:var(--s-3); }
+.nav a{
+  font-size:1rem; font-weight:500; color:var(--silver);
+  text-decoration:none; padding:.4rem 0; position:relative;
+  transition:color .25s var(--ease);
+}
+.nav a::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--silver-hi); transform:scaleX(0); transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.nav a:hover{ color:var(--silver-hi); }
+.nav a:hover::after{ transform:scaleX(1); }
+
+/* The page you're on stays lit. */
+.nav a[aria-current="page"]{ color:var(--silver-hi); }
+.nav a[aria-current="page"]::after{ transform:scaleX(1); background:var(--brass); }
+
+.masthead-cta{
+  order:3;
+  min-height:48px; padding:.6rem 1.25rem; font-size:1rem;
+}
+
+/* No hamburger. At this age a menu you have to find is a menu you don't
+   use, so the links wrap onto their own row and stay visible. */
+@media (max-width:900px){
+  .masthead .wrap{ min-height:0; padding-block:.7rem; gap:.75rem var(--s-3); }
+  .masthead-cta{ order:2; }
+  .nav{
+    order:3; width:100%;
+    justify-content:space-between; gap:var(--s-2);
+    border-top:1px solid var(--hair); padding-top:.5rem;
+  }
+  .nav a{ font-size:.95rem; padding:.55rem 0; }
+}
+@media (max-width:480px){
+  .nav{ flex-wrap:wrap; justify-content:flex-start; gap:0 var(--s-3); }
+  .brand-txt b{ font-size:1rem; }
+  .masthead-cta{ padding:.6rem 1rem; }
+}
+
+/* ---------- Hero (home page) ---------- */
+
+.hero{
+  position:relative; overflow:hidden;
+  padding-block:var(--s-7) var(--s-6);
+  background:
+    radial-gradient(120% 90% at 12% 0%,  rgba(59,125,227,.20) 0%, transparent 58%),
+    radial-gradient(90% 70% at 92% 22%, rgba(203,165,63,.10) 0%, transparent 60%),
+    linear-gradient(180deg, var(--navy) 0%, var(--ink) 92%);
+}
+/* Halftone dot field — the yearbook print texture. */
+.hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(rgba(199,207,216,.30) 1px, transparent 1.1px);
+  background-size:7px 7px;
+  -webkit-mask-image:radial-gradient(75% 60% at 78% 32%, #000 0%, transparent 72%);
+          mask-image:radial-gradient(75% 60% at 78% 32%, #000 0%, transparent 72%);
+  opacity:.5;
+}
+/* Faint stadium yard lines. */
+.hero::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,
+    rgba(199,207,216,.055) 0 1px, transparent 1px 116px);
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 45%, transparent 100%);
+          mask-image:linear-gradient(180deg, transparent 0%, #000 45%, transparent 100%);
+}
+.hero .wrap{ position:relative; z-index:1; }
+
+.hero-grid{
+  display:grid; gap:var(--s-5);
+  grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+  align-items:center;
+}
+@media (max-width:900px){
+  .hero-grid{ grid-template-columns:1fr; gap:var(--s-4); }
+}
+
+/* Hero lockup: the crest sits above the foil "50", the way it would be
+   stamped on a yearbook cover. */
+.hero-mark{
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--s-2);
+}
+.hero-crest{
+  width:clamp(104px, 12vw, 148px);
+  height:auto;
+  padding:.5rem;
+  background:var(--paper);
+  border:1px solid rgba(203,165,63,.55);
+  border-radius:4px;
+  box-shadow:0 20px 40px -22px rgba(7,14,26,1),
+             0 0 0 1px rgba(7,14,26,.5),
+             0 0 34px -12px rgba(203,165,63,.35);
+}
+
+/* The signature: a foil "50" set like the stone in a class ring. */
+.ring{
+  position:relative;
+  display:grid; place-items:center;
+  aspect-ratio:1/1;
+  max-width:360px; width:100%; margin-inline:auto;
+}
+.ring-bezel{
+  position:absolute; inset:6%;
+  border:1px solid rgba(203,165,63,.5);
+  border-radius:50%;
+  transform:rotate(-9deg) scaleY(.86);
+}
+.ring-bezel::before{
+  content:""; position:absolute; inset:5%;
+  border:1px solid rgba(203,165,63,.22);
+  border-radius:50%;
+}
+.ring-num{
+  font-family:var(--display); font-weight:900;
+  font-size:var(--t-mega); line-height:.8; letter-spacing:-.06em;
+  font-variation-settings:"SOFT" 60, "WONK" 1;
+  position:relative; z-index:1;
+  filter:drop-shadow(0 14px 34px rgba(7,14,26,.9));
+}
+.ring-cap{
+  position:absolute; bottom:2%; left:50%; transform:translateX(-50%);
+  font-family:var(--util); font-size:.78rem; letter-spacing:.42em;
+  text-transform:uppercase; color:var(--brass); text-indent:.42em;
+  white-space:nowrap;
+}
+
+.hero-eyebrow{ margin-bottom:var(--s-2); }
+.hero h1{
+  font-size:var(--t-h1);
+  margin-bottom:var(--s-3);
+  max-width:16ch;
+}
+.hero-dek{
+  font-size:var(--t-lg); line-height:1.65; color:var(--silver);
+  max-width:52ch; margin-bottom:var(--s-4);
+}
+.hero-dek strong{ color:var(--silver-hi); font-weight:600; }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:var(--s-2); }
+
+/* ---------- Page header (interior pages) ---------- */
+
+.page-head{
+  position:relative; overflow:hidden;
+  padding-block:var(--s-6) var(--s-5);
+  border-bottom:1px solid var(--hair);
+  background:
+    radial-gradient(110% 130% at 10% 0%, rgba(59,125,227,.20) 0%, transparent 62%),
+    linear-gradient(180deg, var(--navy) 0%, var(--ink) 100%);
+}
+.page-head::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(rgba(199,207,216,.26) 1px, transparent 1.1px);
+  background-size:7px 7px;
+  -webkit-mask-image:radial-gradient(70% 80% at 88% 20%, #000 0%, transparent 74%);
+          mask-image:radial-gradient(70% 80% at 88% 20%, #000 0%, transparent 74%);
+  opacity:.45;
+}
+.page-head .wrap{ position:relative; z-index:1; }
+.page-head .label{ margin-bottom:var(--s-2); }
+.page-head h1{
+  font-size:var(--t-page); max-width:18ch; margin-bottom:var(--s-3);
+}
+.page-head p{
+  font-size:var(--t-lg); line-height:1.65; color:var(--silver); max-width:56ch;
+}
+
+/* ---------- Countdown ---------- */
+
+.countdown{
+  border-block:1px solid var(--hair);
+  background:linear-gradient(180deg, rgba(22,38,63,.55), rgba(7,14,26,.2));
+}
+.countdown .wrap{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:var(--s-3) var(--s-5);
+  padding-block:var(--s-3);
+}
+.countdown-lede{
+  font-family:var(--util); font-size:var(--t-label);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--silver);
+  margin:0; margin-right:auto;
+}
+.clock{ display:flex; gap:var(--s-3); list-style:none; margin:0; padding:0; }
+.clock li{ text-align:center; min-width:64px; }
+.clock b{
+  display:block; font-family:var(--display); font-weight:900;
+  font-size:2.1rem; line-height:1; color:var(--brass);
+  font-variant-numeric:tabular-nums; letter-spacing:-.02em;
+}
+.clock span{
+  display:block; font-family:var(--util); font-size:.68rem;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--silver);
+  margin-top:.45rem;
+}
+
+/* ---------- Section furniture ---------- */
+
+.section{ padding-block:var(--s-7); }
+.section-tight{ padding-top:0; }
+.section-head{ max-width:60ch; margin-bottom:var(--s-5); }
+.section-head .label{ margin-bottom:var(--s-2); }
+.section-head h2{ margin-bottom:var(--s-3); }
+.section-head p{ color:var(--silver); font-size:var(--t-lg); line-height:1.65; }
+
+.rule{
+  height:1px; border:0; margin:0;
+  background:linear-gradient(90deg, var(--hair-2), transparent 62%);
+}
+
+/* ---------- Home page: where to go next ---------- */
+
+.links{
+  display:grid; gap:var(--s-3);
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+}
+.link-card{
+  display:flex; flex-direction:column;
+  padding:var(--s-4) var(--s-3);
+  background:linear-gradient(180deg, var(--navy-2), rgba(14,27,48,.7));
+  border:1px solid var(--hair);
+  border-radius:3px;
+  text-decoration:none; color:inherit;
+  box-shadow:0 18px 40px -28px rgba(7,14,26,1);
+  transition:transform .45s var(--ease), border-color .45s var(--ease);
+}
+.link-card:hover{ transform:translateY(-3px); border-color:var(--hair-2); color:inherit; }
+.link-card .label{ margin-bottom:.8rem; color:var(--brass); }
+.link-card h3{ margin-bottom:.6rem; color:var(--silver-hi); }
+.link-card p{ font-size:1.0625rem; line-height:1.6; color:var(--silver); margin:0 0 var(--s-3); }
+.link-card .go{
+  margin-top:auto; font-family:var(--util); font-size:.9rem;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--spinel-lt);
+}
+.link-card:hover .go{ color:var(--silver-hi); }
+
+/* ---------- Home page photo strip ---------- */
+
+/* The whole section is hidden until photos actually load, so an empty
+   or unreachable folder leaves no orphaned heading behind. */
+#photo-strip-section[hidden]{ display:none; }
+
+.strip-head{
+  display:flex; flex-wrap:wrap; align-items:flex-end;
+  justify-content:space-between; gap:var(--s-3);
+  margin-bottom:var(--s-4);
+}
+.strip-head .label{ margin-bottom:var(--s-2); }
+
+.strip{
+  display:grid; gap:var(--s-2);
+  grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+}
+.strip-tile{
+  display:block; text-decoration:none;
+  transition:transform .45s var(--ease);
+}
+.strip-tile:hover{ transform:translateY(-3px); }
+.strip-tile .plate-frame{ aspect-ratio:1/1; }
+
+/* ---------- The three days ---------- */
+
+.days{
+  display:grid; gap:var(--s-3);
+  grid-template-columns:repeat(auto-fit, minmax(285px,1fr));
+  margin-bottom:var(--s-5);
+}
+.day{
+  position:relative;
+  display:flex; flex-direction:column;
+  background:linear-gradient(180deg, var(--navy-2), rgba(14,27,48,.7));
+  border:1px solid var(--hair);
+  border-radius:3px;
+  padding:var(--s-4) var(--s-3) var(--s-3);
+  box-shadow:0 18px 40px -28px rgba(7,14,26,1),
+             0 1px 0 rgba(199,207,216,.05) inset;
+  transition:transform .45s var(--ease), border-color .45s var(--ease);
+}
+.day:hover{ transform:translateY(-3px); border-color:var(--hair-2); }
+
+/* Saturday carries the weekend, so it gets the brass edge. */
+.day-main{ border-color:rgba(203,165,63,.42); }
+.day-main::before{
+  content:""; position:absolute; inset:-1px -1px auto -1px; height:2px;
+  background:linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+
+.day-date{
+  font-family:var(--util); font-size:.78rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--brass); margin:0 0 .8rem;
+}
+.day h3{ margin-bottom:.7rem; color:var(--silver-hi); }
+.day-when{
+  font-family:var(--util); font-size:1rem; color:var(--silver-hi);
+  margin:0 0 .9rem; font-variant-numeric:tabular-nums;
+}
+.day p{ font-size:1.0625rem; line-height:1.65; color:var(--silver); }
+
+/* Venue line: a map link, sized to stay tappable. */
+.day-where{ margin:-.4rem 0 .9rem; }
+.day-where a{
+  display:inline-block; padding:.3rem 0;
+  font-family:var(--util); font-size:1rem;
+  color:var(--spinel-lt); text-decoration:underline;
+}
+.day-where a:hover{ color:var(--silver-hi); }
+
+.day-contact{
+  margin-top:auto; padding-top:var(--s-3);
+  border-top:1px solid var(--hair);
+}
+.day-contact dt{
+  font-family:var(--util); font-size:.72rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--silver); margin-bottom:.5rem;
+}
+.day-contact dd{ margin:0; }
+.day-contact b{ display:block; color:var(--silver-hi); font-weight:600; margin-bottom:.35rem; }
+.day-contact a{
+  display:inline-block; padding:.35rem 0; margin-right:1rem;
+  font-size:1.0625rem; color:var(--spinel-lt); text-decoration:underline;
+}
+.day-contact a:hover{ color:var(--silver-hi); }
+
+/* Cost sits in the same bottom slot as Thursday's contact block, so the
+   three cards line up along a shared baseline. */
+.day-cost{
+  margin-top:auto; padding-top:var(--s-3);
+  border-top:1px solid var(--hair);
+}
+/* Scoped to .day so they outrank the `.day p` size rule above. */
+.day .day-cost-label{
+  font-family:var(--util); font-size:.72rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--silver); margin:0 0 .35rem;
+}
+.day .day-cost-amt{
+  margin:0;
+  font-family:var(--display); font-weight:900; font-size:1.9rem;
+  line-height:1.1; letter-spacing:-.025em; color:var(--silver-hi);
+  font-variation-settings:"SOFT" 40, "WONK" 1;
+}
+.day .day-cost-amt span{
+  font-family:var(--body); font-weight:400; font-size:1rem;
+  letter-spacing:0; color:var(--silver);
+}
+
+.note{
+  margin-top:var(--s-3);
+  font-family:var(--util); font-size:.92rem; line-height:1.7;
+  color:var(--silver); border-left:2px solid rgba(203,165,63,.45);
+  padding-left:var(--s-2);
+}
+
+/* ---------- Committee letter ---------- */
+
+.letter{
+  background:linear-gradient(180deg, var(--navy-2), var(--navy));
+  border:1px solid var(--hair);
+  border-radius:3px;
+  padding:clamp(1.6rem, 4vw, 3.2rem);
+  max-width:840px; margin-inline:auto;
+  box-shadow:0 30px 60px -40px rgba(7,14,26,1);
+  position:relative; overflow:hidden;
+}
+.letter::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:repeating-linear-gradient(180deg,
+    transparent 0 33px, rgba(199,207,216,.045) 33px 34px);
+}
+.letter-inner{ position:relative; max-width:64ch; }
+.letter .label{ margin-bottom:var(--s-3); }
+.letter p{
+  font-family:var(--util); font-size:1.0625rem; line-height:1.85; color:var(--silver-hi);
+}
+.sign{
+  margin-top:var(--s-3); padding-top:var(--s-3);
+  border-top:1px solid var(--hair);
+  font-family:var(--util); font-size:.95rem; color:var(--silver); line-height:1.8;
+}
+.sign b{ color:var(--silver-hi); font-weight:700; }
+
+/* Monospace runs wide. Ease it down on phones so lines don't shred. */
+@media (max-width:560px){
+  .letter p{ font-size:.9375rem; line-height:1.75; }
+  .sign{ font-size:.875rem; }
+}
+
+/* ---------- Motto ---------- */
+
+.motto{
+  text-align:center;
+  padding-block:var(--s-6) var(--s-7);
+  background:radial-gradient(70% 100% at 50% 50%, rgba(59,125,227,.13), transparent 70%);
+}
+.crest{
+  width:clamp(160px, 22vw, 260px);
+  height:auto; margin:0 auto var(--s-4);
+  padding:.55rem;
+  background:var(--paper);
+  border:1px solid rgba(203,165,63,.5);
+  border-radius:4px;
+  box-shadow:0 26px 50px -26px rgba(7,14,26,1),
+             0 0 0 1px rgba(7,14,26,.5);
+}
+.motto-latin{
+  font-family:var(--display); font-weight:900;
+  font-size:clamp(1.9rem, 1rem + 3.4vw, 3.1rem);
+  font-variation-settings:"SOFT" 40, "WONK" 1;
+  letter-spacing:-.02em; font-style:italic;
+  margin:0 0 var(--s-2);
+}
+.motto-en{
+  font-size:var(--t-lg); color:var(--silver);
+  max-width:44ch; margin:0 auto;
+}
+
+/* ---------- In Memoriam (inverted panel) ---------- */
+
+.memoriam{
+  background:linear-gradient(180deg, var(--mist) 0%, var(--mist-2) 100%);
+  color:var(--mist-ink);
+}
+.memoriam .label{ color:#5A6B80; }
+.memoriam h2{ color:var(--mist-ink); }
+.memoriam .section-head p{ color:#42546B; }
+.memoriam a{ color:#1B4FA8; }
+.memoriam a:hover{ color:var(--mist-ink); }
+.memoriam :focus-visible{ outline-color:#1B4FA8; }
+
+.names{
+  list-style:none; margin:0 0 var(--s-4); padding:0;
+  columns:3; column-gap:var(--s-5);
+  font-size:1.125rem; line-height:2.1;
+}
+@media (max-width:820px){ .names{ columns:2; } }
+@media (max-width:520px){ .names{ columns:1; } }
+.names li{ break-inside:avoid; color:var(--mist-ink); }
+
+.memoriam-foot{
+  border-top:1px solid rgba(22,38,63,.18);
+  padding-top:var(--s-3);
+  font-size:1.0625rem; color:#42546B; max-width:62ch;
+}
+
+/* ---------- Gallery ---------- */
+
+.gallery{
+  display:grid; gap:var(--s-2);
+  grid-template-columns:repeat(auto-fit, minmax(215px,1fr));
+}
+.plate{ margin:0; }
+.plate-frame{
+  position:relative; overflow:hidden;
+  border:1px solid var(--hair);
+  border-radius:2px;
+  background:var(--navy-2);
+  aspect-ratio:4/5;
+}
+/* Photographs are shown as they are. An earlier duotone treatment looked
+   right over grey placeholders and wrong over real ones. */
+.plate-frame img{
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .8s var(--ease);
+}
+.plate:hover .plate-frame img{ transform:scale(1.04); }
+.plate figcaption{
+  font-family:var(--util); font-size:.86rem; line-height:1.55;
+  color:var(--silver); margin-top:.85rem;
+}
+.plate figcaption b{ display:block; color:var(--silver-hi); font-weight:700; }
+
+.gallery-cta{
+  margin-top:var(--s-4); padding-top:var(--s-4);
+  border-top:1px solid var(--hair);
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--s-3);
+}
+.gallery-cta p{ margin:0; color:var(--silver); max-width:46ch; }
+
+/* Status line while the Drive folder loads, or if it can't be reached. */
+.gallery-status{
+  font-family:var(--util); font-size:.95rem; color:var(--silver);
+  margin:0 0 var(--s-3);
+}
+.gallery-status[hidden]{ display:none; }
+
+/* Photos loaded from Drive are clickable; placeholders are not. */
+.plate-btn{
+  display:block; width:100%; padding:0; border:0; background:none;
+  cursor:zoom-in; text-align:left; color:inherit; font:inherit;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox{
+  position:fixed; inset:0; z-index:300;
+  background:rgba(7,14,26,.95);
+  backdrop-filter:blur(6px);
+  display:none; align-items:center; justify-content:center;
+  padding:var(--s-4) var(--s-3);
+}
+.lightbox.is-open{ display:flex; }
+.lightbox-inner{ max-width:min(1100px, 94vw); text-align:center; }
+.lightbox img{
+  max-width:100%; max-height:80vh; width:auto; height:auto;
+  margin-inline:auto;
+  border:1px solid var(--hair-2);
+  box-shadow:0 40px 80px -40px #000;
+}
+.lightbox-cap{
+  font-family:var(--util); font-size:1rem; color:var(--silver);
+  margin:var(--s-3) 0 0;
+}
+.lightbox-close{
+  position:absolute; top:var(--s-2); right:var(--s-2);
+  min-height:52px; min-width:52px;
+  background:transparent; border:1px solid var(--hair-2); border-radius:2px;
+  color:var(--silver-hi); font-family:var(--body); font-size:1.4rem;
+  cursor:pointer; line-height:1;
+  transition:border-color .3s var(--ease), background-color .3s var(--ease);
+}
+.lightbox-close:hover{ border-color:var(--silver); background:rgba(199,207,216,.08); }
+
+/* Big, obvious arrows. This audience should never have to hunt for them. */
+.lightbox-nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:64px; height:64px;
+  display:grid; place-items:center;
+  background:rgba(7,14,26,.8);
+  border:1px solid var(--hair-2); border-radius:50%;
+  color:var(--silver-hi);
+  font-family:var(--body); font-size:2.1rem; line-height:1;
+  cursor:pointer;
+  transition:background-color .3s var(--ease), border-color .3s var(--ease),
+             transform .3s var(--ease);
+}
+.lightbox-prev{ left:var(--s-3); }
+.lightbox-next{ right:var(--s-3); }
+.lightbox-nav:hover{
+  background:rgba(59,125,227,.55); border-color:var(--silver);
+  transform:translateY(-50%) scale(1.06);
+}
+.lightbox-count{
+  font-family:var(--util); font-size:.85rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--silver);
+  margin:var(--s-2) 0 0;
+}
+@media (max-width:620px){
+  .lightbox-nav{ width:52px; height:52px; font-size:1.7rem; }
+  .lightbox-prev{ left:.35rem; }
+  .lightbox-next{ right:.35rem; }
+}
+
+/* ---------- RSVP ---------- */
+
+.rsvp{
+  position:relative; overflow:hidden;
+  background:
+    radial-gradient(90% 130% at 50% 0%, rgba(59,125,227,.26), transparent 62%),
+    linear-gradient(180deg, var(--navy) , var(--ink));
+  border-top:1px solid var(--hair);
+  text-align:center;
+}
+.rsvp .wrap{ position:relative; z-index:1; max-width:800px; }
+.rsvp h2{ margin-bottom:var(--s-3); }
+.rsvp-dek{ font-size:var(--t-lg); color:var(--silver); margin-bottom:var(--s-4); }
+.rsvp .hero-cta{ justify-content:center; }
+.rsvp-fine{
+  margin-top:var(--s-4); font-family:var(--util); font-size:.95rem;
+  color:var(--silver); line-height:1.9;
+}
+.rsvp-fine b{ color:var(--silver-hi); font-weight:700; }
+
+/* Recap of the essentials on the RSVP page. */
+.facts{
+  display:grid; gap:0; margin:0 0 var(--s-5);
+  grid-template-columns:repeat(auto-fit, minmax(190px,1fr));
+  background:linear-gradient(180deg, var(--navy-2), rgba(14,27,48,.72));
+  border:1px solid var(--hair); border-radius:3px;
+  text-align:left; overflow:hidden;
+}
+.facts > div{ padding:var(--s-3); border-left:1px solid var(--hair); }
+.facts > div:first-child{ border-left:0; }
+.facts dt{
+  font-family:var(--util); font-size:.72rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--brass); margin:0 0 .6rem;
+}
+.facts dd{ margin:0; font-size:1.0625rem; line-height:1.55; color:var(--silver); }
+.facts dd b{
+  display:block; font-family:var(--display); font-weight:900; font-size:1.3rem;
+  letter-spacing:-.02em; color:var(--silver-hi);
+  font-variation-settings:"SOFT" 40, "WONK" 1;
+}
+@media (max-width:760px){
+  .facts{ grid-template-columns:1fr 1fr; }
+  .facts > div:nth-child(odd){ border-left:0; }
+  .facts > div:nth-child(n+3){ border-top:1px solid var(--hair); }
+}
+@media (max-width:460px){
+  .facts{ grid-template-columns:1fr; }
+  .facts > div{ border-left:0; border-top:1px solid var(--hair); }
+  .facts > div:first-child{ border-top:0; }
+}
+
+/* ---------- Footer ---------- */
+
+.foot{
+  border-top:1px solid var(--hair);
+  padding-block:var(--s-5) var(--s-4);
+  background:var(--ink);
+}
+.foot-grid{
+  display:grid; gap:var(--s-4);
+  grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  margin-bottom:var(--s-4);
+}
+.foot h4{
+  font-family:var(--util); font-size:var(--t-label); letter-spacing:.2em;
+  text-transform:uppercase; color:var(--silver); font-weight:400;
+  margin:0 0 var(--s-2);
+}
+.foot p, .foot ul{ font-size:1.0625rem; color:var(--silver); margin:0; }
+.foot ul{ list-style:none; padding:0; display:grid; gap:.55rem; }
+.foot a{ color:var(--silver); text-decoration:none; }
+.foot a:hover{ color:var(--silver-hi); text-decoration:underline; }
+.colophon{
+  border-top:1px solid var(--hair); padding-top:var(--s-3);
+  font-family:var(--util); font-size:.86rem; color:#7C8898; line-height:1.8;
+  display:flex; flex-wrap:wrap; gap:var(--s-2) var(--s-4); justify-content:space-between;
+}
+
+/* ---------- Scroll reveal ---------- */
+
+/* Content is visible by default. The hidden start state only applies once
+   JS has confirmed it's running, so a script failure can't blank the page. */
+.js .rise{ opacity:0; transform:translateY(22px); }
+.js .rise.in{
+  opacity:1; transform:none;
+  transition:opacity .8s var(--ease), transform .8s var(--ease);
+}
+.js .rise.in:nth-child(2){ transition-delay:.09s; }
+.js .rise.in:nth-child(3){ transition-delay:.18s; }
+.js .rise.in:nth-child(4){ transition-delay:.27s; }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important; animation-iteration-count:1 !important;
+    transition-duration:.001ms !important; scroll-behavior:auto !important;
+  }
+  .js .rise{ opacity:1; transform:none; }
+  .foil{ background-position:38% 50%; }
+}

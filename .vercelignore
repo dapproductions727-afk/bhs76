@@ -1,0 +1,9 @@
+# Belt and braces alongside .gitignore, in case anyone ever deploys
+# straight from this folder with the Vercel CLI instead of from Git.
+voice-profile-declan.md
+anti-ai-writing-style.md
+SKILL.md
+webdesign md.md
+BHSPhotos/
+.DS_Store
+.claude/
