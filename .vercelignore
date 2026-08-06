@@ -7,3 +7,10 @@ webdesign md.md
 BHSPhotos/
 .DS_Store
 .claude/
+api.env
+api.env.*
+.env
+.env.*
+*.env
+*.env.rtf
+*.env.txt

@@ -9,6 +9,17 @@ webdesign md.md
 # so shipping 24MB of duplicates would only slow the deploy down.
 BHSPhotos/
 
+# Secrets. Never commit these.
+# The trailing-suffix forms matter: TextEdit saves "api.env" as
+# "api.env.rtf", which a plain *.env rule would sail straight past.
+api.env
+api.env.*
+.env
+.env.*
+*.env
+*.env.rtf
+*.env.txt
+
 # macOS junk
 .DS_Store
 **/.DS_Store
