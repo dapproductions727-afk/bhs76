@@ -546,6 +546,10 @@ p:last-child{ margin-bottom:0; }
   font-family:var(--body); font-weight:400; font-size:1rem;
   letter-spacing:0; color:var(--silver);
 }
+/* The ask behind the number, set smaller so it reads as a footnote. */
+.day .day-cost-note{
+  margin:.7rem 0 0; font-size:.9375rem; line-height:1.6; color:var(--silver);
+}
 
 .note{
   margin-top:var(--s-3);
