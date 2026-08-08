@@ -8,10 +8,9 @@ and it works.
 | File | Page |
 | --- | --- |
 | `index.html` | Home: hero, countdown, recent photos, committee letter |
-| `weekend.html` | Thursday / Friday / Saturday schedule |
+| `weekend.html` | Thursday / Saturday schedule |
 | `photos.html` | Full photo gallery, loaded from Google Drive |
 | `memoriam.html` | In memoriam |
-| `rsvp.html` | Register and pay |
 | `styles.css` | All styling, shared by every page |
 | `site.js` | Countdown, gallery, lightbox, scroll reveals |
 
@@ -27,10 +26,12 @@ shows as "Homecoming 1975".
 
 Search the project for `SWAP:` to find each one.
 
-- **In memoriam names** — `memoriam.html`, currently `[Classmate name]` placeholders
 - **Committee names** — `index.html`, in the letter's signature block
-- **Venmo handle** — `rsvp.html`, currently `Briarcliff-1976` in two places that must match
 - **Committee email and phone** — the footer on every page
+
+"Reserve your spot" everywhere points to the Google Form:
+<https://forms.gle/mnTk29rSbrBv1z8Y6>. Registration and payment are handled
+there, so the site has no RSVP page of its own.
 
 ## Working on it locally
 
