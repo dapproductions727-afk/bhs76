@@ -445,11 +445,21 @@ p:last-child{ margin-bottom:0; }
 /* Names only. Everything else the RSVP form collects — phone,
    email, Venmo — stays off the page. */
 
+/* The page header already sets the page up, so the usual full
+   section padding leaves too much air above the count. */
+.attendees{ padding-top:var(--s-5); }
+
 .roster-count{
+  display:flex; align-items:baseline; gap:.6rem;
   font-family:var(--util); font-size:.85rem; letter-spacing:.18em;
   text-transform:uppercase; color:var(--brass);
   margin:0 0 var(--s-3); padding-bottom:var(--s-2);
   border-bottom:1px solid var(--hair);
+}
+/* The tally itself, sized like the countdown numerals. */
+.roster-count b{
+  font-family:var(--display); font-weight:900; font-size:2.1rem;
+  line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums;
 }
 
 .roster{

@@ -145,7 +145,14 @@
     });
 
     if (rosterCount) {
-      rosterCount.textContent = names.length + (names.length === 1 ? " classmate" : " classmates");
+      /* The tally is its own element so it can be sized up. */
+      rosterCount.textContent = "";
+      var tally = document.createElement("b");
+      tally.textContent = names.length;
+      rosterCount.appendChild(tally);
+      rosterCount.appendChild(
+        document.createTextNode(names.length === 1 ? "classmate" : "classmates")
+      );
     }
   }
 
