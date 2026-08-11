@@ -31,6 +31,139 @@
     apiKey: "AIzaSyB_h1LuFwUWj6eBT0eGWnMrbtiVS55_T7o"
   };
 
+  /* ==========================================================
+     ATTENDEE ROSTER — reads the live RSVP sheet.
+     ==========================================================
+     Only first and last names ever reach the page. The sheet
+     also holds cell numbers, email addresses, Venmo handles and
+     payment amounts, so NEVER point csvUrl at the raw form
+     responses tab — publishing that tab puts all of it on the
+     open web. Publish a trimmed two-column tab instead.
+
+     SETUP (already done, kept for reference):
+
+     1. The spreadsheet has a tab named "Roster" holding nothing
+        but two columns, pulled across by this formula in A1:
+
+          =QUERY('Form Responses 1'!C:D, "select C, D", 1)
+
+        (C = first name, D = last name. If the form ever gains or
+        loses a question those letters shift, so check them.)
+     2. File > Share > Publish to web, with that ONE tab selected
+        rather than "Entire document", as .csv.
+     3. The published link goes in csvUrl below. Note it ends in
+        output=csv — the address bar shows a /pubhtml link, which
+        returns a web page and will not work here.
+
+     Leave csvUrl blank and the hand-written list in the page
+     stays put, which is also what happens if Google is ever slow
+     or unreachable. Nothing breaks either way.
+     ========================================================== */
+  var ROSTER = {
+    csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDwZZdoEndXn455nmc6hRTVJiVMVAqFARF93TV9hP4ZB8a4v95JoyuiTh1XXiEeLV7dN0chRDa-GqY/pub?gid=785449616&single=true&output=csv"
+  };
+
+  var roster = byId("roster");
+  var rosterCount = byId("roster-count");
+
+  /* A real CSV parser, because a name can carry a comma and
+     arrives quoted: "Balser, Jr." must survive as one field. */
+  function parseCsv(text) {
+    var rows = [], row = [], field = "", quoted = false, i, c;
+
+    for (i = 0; i < text.length; i++) {
+      c = text.charAt(i);
+
+      if (quoted) {
+        if (c !== '"') { field += c; }
+        else if (text.charAt(i + 1) === '"') { field += '"'; i++; }  /* "" is a literal quote */
+        else { quoted = false; }
+      } else if (c === '"') {
+        quoted = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else if (c !== "\r") {
+        field += c;
+      }
+    }
+    if (field || row.length) { row.push(field); rows.push(row); }
+
+    return rows;
+  }
+
+  /* Find columns by what the heading says rather than by position,
+     so reordering the sheet doesn't scramble the page. */
+  function columnFinder(headings) {
+    var lower = headings.map(function (h) { return h.toLowerCase(); });
+    return function (phrase) {
+      for (var i = 0; i < lower.length; i++) {
+        if (lower[i].indexOf(phrase) !== -1) { return i; }
+      }
+      return -1;
+    };
+  }
+
+  function tidy(s) { return (s || "").replace(/\s+/g, " ").trim(); }
+
+  function rowsToNames(rows) {
+    if (rows.length < 2) { return []; }
+
+    var find = columnFinder(rows[0]);
+    var iFirst = find("first name");
+    var iLast = find("last name");
+    if (iFirst === -1 || iLast === -1) { return []; }   /* not the sheet we expected */
+
+    var seen = {};
+    var names = [];
+
+    rows.slice(1).forEach(function (row) {
+      var first = tidy(row[iFirst]);
+      var last = tidy(row[iLast]);
+      if (!first && !last) { return; }                  /* blank row at the bottom */
+
+      var name = tidy(first + " " + last);
+      var key = name.toLowerCase();
+      if (seen[key]) { return; }                        /* someone replied twice */
+      seen[key] = true;
+
+      names.push({ text: name, sortKey: (last + " " + first).toLowerCase() });
+    });
+
+    names.sort(function (a, b) { return a.sortKey < b.sortKey ? -1 : a.sortKey > b.sortKey ? 1 : 0; });
+    return names;
+  }
+
+  function renderRoster(names) {
+    roster.textContent = "";
+
+    names.forEach(function (name) {
+      var li = document.createElement("li");
+      li.textContent = name.text;
+      roster.appendChild(li);
+    });
+
+    if (rosterCount) {
+      rosterCount.textContent = names.length + (names.length === 1 ? " classmate" : " classmates");
+    }
+  }
+
+  if (roster && ROSTER.csvUrl) {
+    fetch(ROSTER.csvUrl)
+      .then(function (res) {
+        if (!res.ok) { throw new Error("Sheet returned " + res.status); }
+        return res.text();
+      })
+      .then(function (text) {
+        var names = rowsToNames(parseCsv(text));
+        /* An empty or unrecognised sheet leaves the written-out
+           list alone. Better a stale roster than a blank one. */
+        if (names.length) { renderRoster(names); }
+      })
+      .catch(function () { /* keep the list that's already on the page */ });
+  }
+
   /* ---- Lightbox (photos page only) ---- */
 
   var lightbox = byId("lightbox");
