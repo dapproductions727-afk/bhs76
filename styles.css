@@ -737,6 +737,13 @@ p:last-child{ margin-bottom:0; }
 }
 .gallery-cta p{ margin:0; color:var(--silver); max-width:46ch; }
 
+/* Same block, sitting above the gallery: the hairline goes underneath. */
+.gallery-cta-top{
+  margin-top:0; padding-top:0;
+  margin-bottom:var(--s-4); padding-bottom:var(--s-4);
+  border-top:0; border-bottom:1px solid var(--hair);
+}
+
 /* Status line while the Drive folder loads, or if it can't be reached. */
 .gallery-status{
   font-family:var(--util); font-size:.95rem; color:var(--silver);
