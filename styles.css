@@ -737,12 +737,12 @@ p:last-child{ margin-bottom:0; }
 }
 .gallery-cta p{ margin:0; color:var(--silver); max-width:46ch; }
 
-/* Same block, sitting above the gallery: the hairline goes underneath. */
-.gallery-cta-top{
-  margin-top:0; padding-top:0;
-  margin-bottom:var(--s-4); padding-bottom:var(--s-4);
-  border-top:0; border-bottom:1px solid var(--hair);
+/* Same block, riding along with the headline: no rule of its own, and
+   it opts out of the oversized type the page head gives paragraphs. */
+.gallery-cta-head{
+  margin-top:var(--s-4); padding-top:0; border-top:0;
 }
+.page-head .gallery-cta-head p{ font-size:1rem; }
 
 /* Status line while the Drive folder loads, or if it can't be reached. */
 .gallery-status{
