@@ -60,7 +60,40 @@
      or unreachable. Nothing breaks either way.
      ========================================================== */
   var ROSTER = {
-    csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDwZZdoEndXn455nmc6hRTVJiVMVAqFARF93TV9hP4ZB8a4v95JoyuiTh1XXiEeLV7dN0chRDa-GqY/pub?gid=785449616&single=true&output=csv"
+    csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDwZZdoEndXn455nmc6hRTVJiVMVAqFARF93TV9hP4ZB8a4v95JoyuiTh1XXiEeLV7dN0chRDa-GqY/pub?gid=785449616&single=true&output=csv",
+
+    /* --------------------------------------------------------
+       COMMITTEE: classmates who paid on Venmo but never filled
+       out the form, so the sheet has never heard of them.
+
+       Type one name per line, "First Last", in quotes with a
+       comma after it. Order does not matter — the page files
+       everyone by last name.
+
+       These names sit alongside the sheet names, and the two
+       lists never double anyone up: if someone here later fills
+       out the form, they still appear once. When that happens
+       you can delete their line, but nothing breaks if you
+       forget. Leave the list empty and the page behaves exactly
+       as it did before.
+       -------------------------------------------------------- */
+    venmoNames: [
+      "Janice Callison",
+      "Jane Durham",
+      "Mark Goodleman",
+      "Raye Gray",
+      "Heleen Grossman",
+      "Victor Haley",
+      "Ken Joel",
+      "Sharon Karlan",
+      "Mamie Kresses",
+      "Lisa LaMattina",
+      "Wendi Lowry",
+      "Helen Noviello",
+      "Joel Rosenberg",
+      "Tim Stapleton",
+      "Bill Vaughn"
+    ]
   };
 
   var roster = byId("roster");
@@ -115,7 +148,6 @@
     var iLast = find("last name");
     if (iFirst === -1 || iLast === -1) { return []; }   /* not the sheet we expected */
 
-    var seen = {};
     var names = [];
 
     rows.slice(1).forEach(function (row) {
@@ -123,16 +155,64 @@
       var last = tidy(row[iLast]);
       if (!first && !last) { return; }                  /* blank row at the bottom */
 
-      var name = tidy(first + " " + last);
-      var key = name.toLowerCase();
-      if (seen[key]) { return; }                        /* someone replied twice */
-      seen[key] = true;
+      names.push({
+        text: tidy(first + " " + last),
+        sortKey: tidy(last + " " + first).toLowerCase()
+      });
+    });
 
-      names.push({ text: name, sortKey: (last + " " + first).toLowerCase() });
+    return names;                                       /* mergeNames sorts and de-dupes */
+  }
+
+  /* A hand-typed name arrives as one string, so the last word is
+     taken as the surname: "Ruth Anne Ekmark" files under E, the
+     same as it would coming from the sheet's two columns. */
+  function toEntry(name) {
+    var text = tidy(name);
+    if (!text) { return null; }
+
+    var parts = text.split(" ");
+    var last = parts[parts.length - 1];
+    var rest = parts.slice(0, -1).join(" ");
+
+    return { text: text, sortKey: tidy(last + " " + rest).toLowerCase() };
+  }
+
+  /* One roster out of however many lists are handed in — the
+     sheet, the Venmo names, the list already written into the
+     page. Earlier lists win, and nobody is listed twice, so
+     someone who paid on Venmo and then filled out the form
+     still appears once. */
+  function mergeNames() {
+    var seen = {};
+    var names = [];
+
+    Array.prototype.forEach.call(arguments, function (list) {
+      (list || []).forEach(function (entry) {
+        if (!entry) { return; }
+
+        var key = entry.text.toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(seen, key)) { return; }
+        seen[key] = true;
+
+        names.push(entry);
+      });
     });
 
     names.sort(function (a, b) { return a.sortKey < b.sortKey ? -1 : a.sortKey > b.sortKey ? 1 : 0; });
     return names;
+  }
+
+  function venmoNames() {
+    return (ROSTER.venmoNames || []).map(toEntry);
+  }
+
+  /* The written-out list in the HTML, so the Venmo names can be
+     folded into it on the days Google is unreachable. */
+  function namesOnPage() {
+    return Array.prototype.map.call(roster.querySelectorAll("li"), function (li) {
+      return toEntry(li.textContent);
+    });
   }
 
   function renderRoster(names) {
@@ -156,19 +236,32 @@
     }
   }
 
-  if (roster && ROSTER.csvUrl) {
-    fetch(ROSTER.csvUrl)
-      .then(function (res) {
-        if (!res.ok) { throw new Error("Sheet returned " + res.status); }
-        return res.text();
-      })
-      .then(function (text) {
-        var names = rowsToNames(parseCsv(text));
-        /* An empty or unrecognised sheet leaves the written-out
-           list alone. Better a stale roster than a blank one. */
-        if (names.length) { renderRoster(names); }
-      })
-      .catch(function () { /* keep the list that's already on the page */ });
+  if (roster) {
+    var extras = venmoNames();
+
+    /* Without the sheet there is still the list in the page, and
+       the Venmo names belong on it either way. */
+    var fallback = function () {
+      if (extras.length) { renderRoster(mergeNames(namesOnPage(), extras)); }
+    };
+
+    if (!ROSTER.csvUrl) {
+      fallback();
+    } else {
+      fetch(ROSTER.csvUrl)
+        .then(function (res) {
+          if (!res.ok) { throw new Error("Sheet returned " + res.status); }
+          return res.text();
+        })
+        .then(function (text) {
+          var fromSheet = rowsToNames(parseCsv(text));
+          /* An empty or unrecognised sheet leaves the written-out
+             list alone. Better a stale roster than a blank one. */
+          if (fromSheet.length) { renderRoster(mergeNames(fromSheet, extras)); }
+          else { fallback(); }
+        })
+        .catch(fallback);
+    }
   }
 
   /* ---- Lightbox (photos page only) ---- */
