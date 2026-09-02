@@ -63,6 +63,27 @@
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDwZZdoEndXn455nmc6hRTVJiVMVAqFARF93TV9hP4ZB8a4v95JoyuiTh1XXiEeLV7dN0chRDa-GqY/pub?gid=785449616&single=true&output=csv",
 
     /* --------------------------------------------------------
+       COMMITTEE: names the sheet gets wrong.
+
+       The sheet holds whatever a classmate typed into the form,
+       and nobody here can edit it, so the fix lives on this
+       side. On the left, exactly as the sheet has it. On the
+       right, how it should read on the page.
+
+       This is also how someone who answered the form under one
+       name and paid under another appears once rather than
+       twice — correct the sheet spelling to the name you want
+       shown, and the two collapse into one.
+       -------------------------------------------------------- */
+    corrections: {
+      "Laurence Hecht": "Larry Hecht",
+      "Anne Lee": "Ann Lee",
+      "Bruce Bruce": "Bruce Leaf",           /* typed his first name twice */
+      "Randi Strumlauf": "Randi Lovenger",
+      "hal arnold": "Hal Arnold"             /* typed in lower case */
+    },
+
+    /* --------------------------------------------------------
        COMMITTEE: classmates who paid on Venmo but never filled
        out the form, so the sheet has never heard of them.
 
@@ -207,12 +228,33 @@
     return (ROSTER.venmoNames || []).map(toEntry);
   }
 
+  /* Swap in the corrected spellings before anything is sorted or
+     de-duped, so a fixed name files under its real surname and
+     collides with a Venmo entry for the same person. */
+  function applyCorrections(names) {
+    var fixes = ROSTER.corrections || {};
+    var lookup = {};
+
+    Object.keys(fixes).forEach(function (from) {
+      lookup[tidy(from).toLowerCase()] = fixes[from];
+    });
+
+    return names.map(function (entry) {
+      if (!entry) { return entry; }
+
+      var fixed = lookup[entry.text.toLowerCase()];
+      return fixed ? toEntry(fixed) : entry;
+    });
+  }
+
   /* The written-out list in the HTML, so the Venmo names can be
      folded into it on the days Google is unreachable. */
   function namesOnPage() {
-    return Array.prototype.map.call(roster.querySelectorAll("li"), function (li) {
-      return toEntry(li.textContent);
-    });
+    return applyCorrections(
+      Array.prototype.map.call(roster.querySelectorAll("li"), function (li) {
+        return toEntry(li.textContent);
+      })
+    );
   }
 
   function renderRoster(names) {
@@ -254,7 +296,7 @@
           return res.text();
         })
         .then(function (text) {
-          var fromSheet = rowsToNames(parseCsv(text));
+          var fromSheet = applyCorrections(rowsToNames(parseCsv(text)));
           /* An empty or unrecognised sheet leaves the written-out
              list alone. Better a stale roster than a blank one. */
           if (fromSheet.length) { renderRoster(mergeNames(fromSheet, extras)); }
