@@ -63,12 +63,13 @@
     csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDwZZdoEndXn455nmc6hRTVJiVMVAqFARF93TV9hP4ZB8a4v95JoyuiTh1XXiEeLV7dN0chRDa-GqY/pub?gid=785449616&single=true&output=csv",
 
     /* --------------------------------------------------------
-       COMMITTEE: names the sheet gets wrong.
+       COMMITTEE: names the sheet gets wrong, or gets short.
 
        The sheet holds whatever a classmate typed into the form,
        and nobody here can edit it, so the fix lives on this
        side. On the left, exactly as the sheet has it. On the
-       right, how it should read on the page.
+       right, how it should read on the page — a typo put right,
+       or a maiden name written back in.
 
        This is also how someone who answered the form under one
        name and paid under another appears once rather than
@@ -80,7 +81,8 @@
       "Anne Lee": "Ann Lee",
       "Bruce Bruce": "Bruce Leaf",           /* typed his first name twice */
       "Randi Strumlauf": "Randi Lovenger",
-      "hal arnold": "Hal Arnold"             /* typed in lower case */
+      "hal arnold": "Hal Arnold",            /* typed in lower case */
+      "Teresa Finer": "Teresa Brickman Finer"
     },
 
     /* --------------------------------------------------------
@@ -110,7 +112,7 @@
       "Mamie Kresses",
       "Lisa LaMattina",
       "Wendi Lowry",
-      "Helen Noviello",
+      "Helen D’Agnese Noviello",
       "Joel Rosenberg",
       "Tim Stapleton",
       "Bill Vaughn"
