@@ -342,9 +342,37 @@ p:last-child{ margin-bottom:0; }
 .hero-dek strong{ color:var(--silver-hi); font-weight:600; }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:var(--s-2); }
 
-/* The deadline line under the hero buttons, held to the same
-   measure as the date above them. */
-.hero-note{ max-width:52ch; }
+/* ---------- Sign-up deadline callout ---------- */
+
+/* Brass rather than blue: the buttons are already blue, and this
+   has to read as a date to diary, not another thing to click. */
+.deadline{
+  margin-top:var(--s-3);
+  max-width:52ch;
+  padding:var(--s-2) var(--s-3);
+  border:1px solid rgba(203,165,63,.5);
+  border-left:4px solid var(--brass);
+  border-radius:2px;
+  background:linear-gradient(180deg, rgba(203,165,63,.13), rgba(203,165,63,.04));
+}
+.deadline-label{
+  font-family:var(--util); font-size:var(--t-label);
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--brass);
+  margin:0 0 .35rem;
+}
+.deadline-txt{
+  margin:0;
+  font-size:var(--t-lg); line-height:1.55;
+  color:var(--silver-hi);
+}
+.deadline-txt b{ font-weight:700; }
+
+/* On the sign-up section, where everything is centred. */
+.deadline-mid{
+  margin:0 auto var(--s-4);
+  text-align:left;
+}
 
 /* ---------- Page header (interior pages) ---------- */
 
