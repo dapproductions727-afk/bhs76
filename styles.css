@@ -342,6 +342,10 @@ p:last-child{ margin-bottom:0; }
 .hero-dek strong{ color:var(--silver-hi); font-weight:600; }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:var(--s-2); }
 
+/* The deadline line under the hero buttons, held to the same
+   measure as the date above them. */
+.hero-note{ max-width:52ch; }
+
 /* ---------- Page header (interior pages) ---------- */
 
 .page-head{
