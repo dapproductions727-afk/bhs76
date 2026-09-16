@@ -80,9 +80,11 @@
       "Laurence Hecht": "Larry Hecht",
       "Anne Lee": "Ann Lee",
       "Bruce Bruce": "Bruce Leaf",           /* typed his first name twice */
-      "Randi Strumlauf": "Randi Lovenger",
+      "Randi Strumlauf": "Randi Lovinger-Strumlauf",
       "hal arnold": "Hal Arnold",            /* typed in lower case */
-      "Teresa Finer": "Teresa Brickman Finer"
+      "Teresa Finer": "Teresa Brickman Finer",
+      "Ruth Anne Ekmark": "Ruth Anne Adams Ekmark",
+      "Tamey Stith": "Tamey Ittner Stith"
     },
 
     /* --------------------------------------------------------
