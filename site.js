@@ -77,14 +77,40 @@
        shown, and the two collapse into one.
        -------------------------------------------------------- */
     corrections: {
-      "Laurence Hecht": "Larry Hecht",
-      "Anne Lee": "Ann Lee",
-      "Bruce Bruce": "Bruce Leaf",           /* typed his first name twice */
-      "Randi Strumlauf": "Randi Lovinger-Strumlauf",
-      "hal arnold": "Hal Arnold",            /* typed in lower case */
-      "Teresa Finer": "Teresa Brickman Finer",
-      "Ruth Anne Ekmark": "Ruth Anne Adams Ekmark",
-      "Tamey Stith": "Tamey Ittner Stith"
+      "Emily Alexander"     : "Emily Moraitakis Alexander",
+      "hal arnold"          : "Hal Arnold",   /* typed in lower case */
+      "Cheryl Beer"         : "Cheryl Alperin Beer",
+      "Susan Bryant"        : "Susan Brooks Bryant",
+      "Rhonda Dermer"       : "Rhonda Waitzman Dermer",
+      "Susan Dollar"        : "Susan Bocock Dollar",
+      "Ruth Anne Ekmark"    : "Ruth Anne Adams Ekmark",
+      "Mindy Ellin"         : "Mindy Maran Ellin",
+      "Teresa Finer"        : "Teresa Brickman Finer",
+      "Marsha Freudenberg"  : "Marsha Jacobs Freudenberg",
+      "Lisa Graham"         : "Lisa Harris Graham",
+      "Raye Gray"           : "Raye Berger Gray",
+      "Laurence Hecht"      : "Larry Hecht",
+      "Sandy Hosford"       : "Sandy Burson Hosford",
+      "Sharon Jacobson"     : "Sharon Stein Jacobson",
+      "Sandra Kalter"       : "Sandra Cohen Kalter",
+      "Lenore Kaye"         : "Lenore Tenenbaum Kaye",
+      "Sharon Kendall"      : "Sharon Laughlin Kendall",
+      "Bruce Bruce"         : "Bruce Leaf",   /* typed his first name twice */
+      "Anne Lee"            : "Ann Daves Lee",
+      "Melanie Long"        : "Melanie Mulkey Long",
+      "Randi Strumlauf"     : "Randi Lovinger-Strumlauf",
+      "Dianne Magids"       : "Dianne Maslia Magids",
+      "Rebecca Marks"       : "Rebecca Turner Marks",
+      "Terri Olson"         : "Terri Miller Olson",
+      "Carol Rice"          : "Carol Lockwood Rice",
+      "Jean Richardson"     : "Jean Carter Richardson",
+      "Susan Shewbridge"    : "Susan Dodson Shewbridge",
+      "Janie Stammen"       : "Janie Cox Stammen",
+      "Tamey Stith"         : "Tamey Ittner Stith",
+      "Marianne Tarica"     : "Marianne Clayman Tarica",
+      "Janet Taylor"        : "Janet McHenry Taylor",
+      "Jolynn VanCamp"      : "Jolynn Wasser VanCamp",
+      "Margaret Weiss"      : "Margaret Strauss Weiss"
     },
 
     /* --------------------------------------------------------
@@ -104,17 +130,17 @@
        -------------------------------------------------------- */
     venmoNames: [
       "Mark Blackman",
-      "Janice Callison",
-      "Jane Durham",
+      "Janice Carter Callison",
+      "Jane Arogeti Durham",
       "Mark Goodleman",
-      "Raye Gray",
-      "Heleen Grossman",
+      "Raye Berger Gray",
+      "Heleen Tibor Grossman",
       "Victor Haley",
       "Ken Joel",
-      "Sharon Karlan",
+      "Sharon Kinsler Karlan",
       "Mamie Kresses",
-      "Lisa LaMattina",
-      "Wendi Lowry",
+      "Lisa Busch LaMattina",
+      "Wendi Katz Lowry",
       "Helen D’Agnese Noviello",
       "Joel Rosenberg",
       "Tim Stapleton",
@@ -204,6 +230,14 @@
     return { text: text, sortKey: tidy(last + " " + rest).toLowerCase() };
   }
 
+  /* Two entries are the same person when first and last names
+     agree, whatever sits between: "Jane Durham" on the sheet is
+     "Jane Arogeti Durham" on the Venmo list. */
+  function personKey(text) {
+    var parts = text.toLowerCase().split(" ");
+    return parts[0] + " " + parts[parts.length - 1];
+  }
+
   /* One roster out of however many lists are handed in — the
      sheet, the Venmo names, the list already written into the
      page. Earlier lists win, and nobody is listed twice, so
@@ -217,7 +251,7 @@
       (list || []).forEach(function (entry) {
         if (!entry) { return; }
 
-        var key = entry.text.toLowerCase();
+        var key = personKey(entry.text);
         if (Object.prototype.hasOwnProperty.call(seen, key)) { return; }
         seen[key] = true;
 
