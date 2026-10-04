@@ -539,6 +539,8 @@
 
   /* ---- Countdown to Saturday, September 19, 2026, 6:30 PM Eastern ---- */
 
+  /* The home page retired its clock after the reunion. This stays
+     put, harmless, in case a countdown to the next one is wanted. */
   var clock = byId("clock");
   if (clock) {
     var target = new Date("2026-09-19T18:30:00-04:00").getTime();

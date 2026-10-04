@@ -342,38 +342,6 @@ p:last-child{ margin-bottom:0; }
 .hero-dek strong{ color:var(--silver-hi); font-weight:600; }
 .hero-cta{ display:flex; flex-wrap:wrap; gap:var(--s-2); }
 
-/* ---------- Sign-up deadline callout ---------- */
-
-/* Brass rather than blue: the buttons are already blue, and this
-   has to read as a date to diary, not another thing to click. */
-.deadline{
-  margin-top:var(--s-3);
-  max-width:52ch;
-  padding:var(--s-2) var(--s-3);
-  border:1px solid rgba(203,165,63,.5);
-  border-left:4px solid var(--brass);
-  border-radius:2px;
-  background:linear-gradient(180deg, rgba(203,165,63,.13), rgba(203,165,63,.04));
-}
-.deadline-label{
-  font-family:var(--util); font-size:var(--t-label);
-  letter-spacing:.2em; text-transform:uppercase;
-  color:var(--brass);
-  margin:0 0 .35rem;
-}
-.deadline-txt{
-  margin:0;
-  font-size:var(--t-lg); line-height:1.55;
-  color:var(--silver-hi);
-}
-.deadline-txt b{ font-weight:700; }
-
-/* On the sign-up section, where everything is centred. */
-.deadline-mid{
-  margin:0 auto var(--s-4);
-  text-align:left;
-}
-
 /* ---------- Page header (interior pages) ---------- */
 
 .page-head{
@@ -775,6 +743,23 @@ p:last-child{ margin-bottom:0; }
   margin-top:var(--s-4); padding-top:0; border-top:0;
 }
 .page-head .gallery-cta-head p{ font-size:1rem; }
+
+/* The three practical notes under the photographer's link. Not a
+   bulleted list on screen: each one gets a brass tick instead. */
+.photo-facts{
+  list-style:none; margin:var(--s-4) 0 0; padding:0;
+  max-width:60ch;
+  display:grid; gap:var(--s-2);
+}
+.photo-facts li{
+  position:relative; padding-left:1.9rem;
+  color:var(--silver); line-height:1.65;
+}
+.photo-facts li::before{
+  content:"\2713";
+  position:absolute; left:0; top:0;
+  color:var(--brass); font-weight:700;
+}
 
 /* Status line while the Drive folder loads, or if it can't be reached. */
 .gallery-status{
